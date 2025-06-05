@@ -127,6 +127,7 @@ sway_sources = files(
 
 	'commands/bar/bind.c',
 	'commands/bar/binding_mode_indicator.c',
+	'commands/bar/delimeter.c',
 	'commands/bar/colors.c',
 	'commands/bar/font.c',
 	'commands/bar/gaps.c',
@@ -136,6 +137,7 @@ sway_sources = files(
 	'commands/bar/id.c',
 	'commands/bar/mode.c',
 	'commands/bar/modifier.c',
+	'commands/bar/notch.c',
 	'commands/bar/output.c',
 	'commands/bar/pango_markup.c',
 	'commands/bar/position.c',

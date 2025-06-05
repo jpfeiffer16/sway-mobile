@@ -70,6 +70,7 @@ void free_bar_config(struct bar_config *bar) {
 	free(bar->colors.binding_mode_border);
 	free(bar->colors.binding_mode_bg);
 	free(bar->colors.binding_mode_text);
+	free(bar->delimeter);
 #if HAVE_TRAY
 	list_free_items_and_destroy(bar->tray_outputs);
 	free(bar->icon_theme);
@@ -106,6 +107,8 @@ struct bar_config *default_bar_config(void) {
 	bar->status_padding = 1;
 	bar->status_edge_padding = 3;
 	bar->workspace_min_width = 0;
+	bar->notch = 0;
+	bar->delimeter = NULL;
 	if (!(bar->mode = strdup("dock"))) {
 	       goto cleanup;
 	}

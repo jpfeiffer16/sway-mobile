@@ -51,6 +51,9 @@ struct swaybar {
 #endif
 
 	bool running;
+
+	char *delimeter;
+	int notch;
 };
 
 struct swaybar_output {

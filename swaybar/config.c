@@ -39,6 +39,8 @@ struct swaybar_config *init_config(void) {
 	wl_list_init(&config->outputs);
 	config->status_padding = 1;
 	config->status_edge_padding = 3;
+	config->delimeter = NULL;
+	config->notch = 0;
 
 	/* height */
 	config->height = 0;
