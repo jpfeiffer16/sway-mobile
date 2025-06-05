@@ -39,6 +39,7 @@ struct swaybar_config {
 	char *mode;
 	char *hidden_state;
 	char *modifier;
+	char *delimeter;
 	bool strip_workspace_numbers;
 	bool strip_workspace_name;
 	bool binding_mode_indicator;
@@ -50,6 +51,7 @@ struct swaybar_config {
 	int height;
 	int status_padding;
 	int status_edge_padding;
+	int notch;
 	struct {
 		int top;
 		int right;

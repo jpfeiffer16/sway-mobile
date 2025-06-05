@@ -22,6 +22,8 @@ int main(int argc, char **argv) {
 		{"version", no_argument, NULL, 'v'},
 		{"socket", required_argument, NULL, 's'},
 		{"bar_id", required_argument, NULL, 'b'},
+		{"delimeter", required_argument, NULL, 'd'},
+		{"notch", required_argument, NULL, 'n'},
 		{"debug", no_argument, NULL, 'd'},
 		{0, 0, 0, 0}
 	};
@@ -29,11 +31,13 @@ int main(int argc, char **argv) {
 	const char *usage =
 		"Usage: swaybar [options...]\n"
 		"\n"
-		"  -h, --help             Show help message and quit.\n"
-		"  -v, --version          Show the version number and quit.\n"
-		"  -s, --socket <socket>  Connect to sway via socket.\n"
-		"  -b, --bar_id <id>      Bar ID for which to get the configuration.\n"
-		"  -d, --debug            Enable debugging.\n"
+		"  -h, --help               Show help message and quit.\n"
+		"  -v, --version            Show the version number and quit.\n"
+		"  -s, --socket <socket>    Connect to sway via socket.\n"
+		"  -b, --bar_id <id>        Bar ID for which to get the configuration.\n"
+		"  -l, --delimeter <delim>  Look for <delim> between sections. Allows flexible layouts.\n"
+		"  -n, --notch              Enable notch support. Requires --delimeter.\n"
+		"  -d, --debug              Enable debugging.\n"
 		"\n"
 		" PLEASE NOTE that swaybar will be automatically started by sway as\n"
 		" soon as there is a 'bar' configuration block in your config file.\n"
@@ -52,6 +56,12 @@ int main(int argc, char **argv) {
 			break;
 		case 'b': // Type
 			swaybar.id = strdup(optarg);
+			break;
+		case 'n':
+			swaybar.notch = atoi(optarg);
+			break;
+		case 'l':
+			swaybar.delimeter = strdup(optarg);
 			break;
 		case 'v':
 			printf("swaybar version " SWAY_VERSION "\n");
@@ -98,6 +108,9 @@ int main(int argc, char **argv) {
 	sigaction(SIGTERM, &sa, NULL);
 
 	swaybar.running = true;
+	sway_log(SWAY_INFO, "STATS");
+	sway_log(SWAY_INFO, "Delim: %s", swaybar.config->delimeter);
+	sway_log(SWAY_INFO, "Notch: %d", swaybar.config->notch);
 	bar_run(&swaybar);
 	bar_teardown(&swaybar);
 	return 0;

@@ -282,6 +282,16 @@ static bool ipc_parse_config(
 	if (wrap_scroll) {
 		config->wrap_scroll = json_object_get_boolean(wrap_scroll);
 	}
+
+	json_object *notch = json_object_object_get(bar_config, "notch");
+	if (notch) {
+		config->notch = json_object_get_int(notch);
+	}
+
+	json_object *delimeter = json_object_object_get(bar_config, "delimeter");
+	if (notch) {
+		config->delimeter = strdup(json_object_get_string(delimeter));
+	}
 #if HAVE_TRAY
 	json_object *tray_outputs, *tray_padding, *tray_bindings, *icon_theme;
 
