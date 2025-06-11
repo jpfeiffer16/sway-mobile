@@ -21,6 +21,7 @@ static const struct cmd_handler bar_handlers[] = {
 	{ "mode", bar_cmd_mode },
 	{ "modifier", bar_cmd_modifier },
 	{ "notch", bar_cmd_notch },
+	{ "notch_debug", bar_cmd_notch_debug },
 	{ "output", bar_cmd_output },
 	{ "pango_markup", bar_cmd_pango_markup },
 	{ "position", bar_cmd_position },

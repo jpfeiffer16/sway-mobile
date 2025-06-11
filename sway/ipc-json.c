@@ -1280,6 +1280,13 @@ json_object *ipc_json_describe_bar_config(struct bar_config *bar) {
 			json_object_new_int(bar->gaps.left));
 	json_object_object_add(json, "gaps", gaps);
 
+	json_object_object_add(json, "notch",
+			json_object_new_int(bar->notch));
+	json_object_object_add(json, "notch_debug",
+			json_object_new_boolean(bar->notch_debug));
+	json_object_object_add(json, "delimeter",
+			json_object_new_string(bar->delimeter));
+
 	if (bar->separator_symbol) {
 		json_object_object_add(json, "separator_symbol",
 				json_object_new_string(bar->separator_symbol));

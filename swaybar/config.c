@@ -41,6 +41,7 @@ struct swaybar_config *init_config(void) {
 	config->status_edge_padding = 3;
 	config->delimeter = NULL;
 	config->notch = 0;
+	config->notch_debug = false;
 
 	/* height */
 	config->height = 0;
@@ -110,6 +111,7 @@ void free_config(struct swaybar_config *config) {
 	free(config->mode);
 	free(config->hidden_state);
 	free(config->sep_symbol);
+	free(config->delimeter);
 	for (int i = 0; i < config->bindings->length; i++) {
 		struct swaybar_binding *binding = config->bindings->items[i];
 		free_binding(binding);
