@@ -47,6 +47,7 @@ struct swaybar_config {
 	int status_padding;
 	int status_edge_padding;
 	int notch;
+	bool notch_debug;
 	struct {
 		int top;
 		int right;

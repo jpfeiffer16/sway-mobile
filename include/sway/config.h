@@ -357,12 +357,11 @@ struct bar_config {
 	 */
 	char *id;
 	uint32_t modifier;
+	char *delimeter;
 	list_t *outputs;
 	char *position;
 	list_t *bindings;
 	char *status_command;
-	char *delimeter;
-	int notch;
 	enum pango_markup_config pango_markup;
 	char *font;
 	int height; // -1 not defined
@@ -377,6 +376,8 @@ struct bar_config {
 	int status_padding;
 	int status_edge_padding;
 	uint32_t workspace_min_width;
+	int notch;
+	bool notch_debug;
 	struct {
 		char *background;
 		char *statusline;

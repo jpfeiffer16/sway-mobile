@@ -89,6 +89,8 @@ static uint32_t render_status_line_text(struct render_context *ctx, double *x) {
 	if (!text) {
 		return 0;
 	}
+	
+	int max_width = *x;
 
 	cairo_t *cairo = ctx->cairo;
 	struct swaybar_config *config = output->bar->config;
@@ -96,12 +98,20 @@ static uint32_t render_status_line_text(struct render_context *ctx, double *x) {
 			config->colors.focused_statusline : config->colors.statusline;
 	cairo_set_source_u32(cairo, fontcolor);
 
+	char *delim = strdup(config->delimeter);
+	char *text_cp = strdup(text);
+
+	int text_len = strlen(text_cp) - 1;
+
+	char *word_list[50] = { 0 };
+	int word_count = 0;
+	char *word = strtok(text_cp, delim);
 	int text_width, text_height;
 	get_text_size(cairo, config->font_description, &text_width, &text_height, NULL,
 			1, config->pango_markup, "%s", text);
 
 	double ws_vertical_padding = config->status_padding;
-	int margin = 3;
+	int margin = 6;
 
 	uint32_t ideal_height = text_height + ws_vertical_padding * 2;
 	uint32_t ideal_surface_height = ideal_height;
@@ -110,52 +120,57 @@ static uint32_t render_status_line_text(struct render_context *ctx, double *x) {
 		return ideal_surface_height;
 	}
 
-	*x -= text_width + margin;
 	uint32_t height = output->height;
-	double text_y = height / 2.0 - text_height / 2.0;
-	cairo_move_to(cairo, *x, (int)floor(text_y));
-	choose_text_aa_mode(ctx, fontcolor);
-	render_text(cairo, config->font_description, 1, config->pango_markup, "%s", text);
-	*x -= margin;
-	return output->height;
-}
 
-static void render_sharp_rectangle(cairo_t *cairo, uint32_t color,
-		double x, double y, double width, double height) {
-	cairo_save(cairo);
-	cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
-	cairo_set_source_u32(cairo, color);
-	cairo_set_antialias(cairo, CAIRO_ANTIALIAS_NONE);
-	cairo_rectangle(cairo, x, y, width, height);
-	cairo_fill(cairo);
-	cairo_restore(cairo);
-}
-
-static void render_sharp_line(cairo_t *cairo, uint32_t color,
-		double x, double y, double width, double height) {
-	if (width > 1 && height > 1) {
-		render_sharp_rectangle(cairo, color, x, y, width, height);
-	} else {
-		cairo_save(cairo);
-		cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
-		cairo_set_source_u32(cairo, color);
-		cairo_set_antialias(cairo, CAIRO_ANTIALIAS_NONE);
-		if (width == 1) {
-			x += 0.5;
-			height += y;
-			width = x;
-		}
-		if (height == 1) {
-			y += 0.5;
-			width += x;
-			height = y;
-		}
-		cairo_move_to(cairo, x, y);
-		cairo_set_line_width(cairo, 1.0);
-		cairo_line_to(cairo, width, height);
-		cairo_stroke(cairo);
-		cairo_restore(cairo);
+	while (word) {
+		word_list[word_count++] = word;
+		word = strtok(NULL, delim);
 	}
+
+	*x -= margin * 4;
+
+	sway_log(SWAY_INFO, "notch_debug: %b", config->notch_debug);
+	render_sharp_rectangle(
+	  cairo,
+	  config->colors.urgent_workspace.border,
+	  (max_width / 2) - (config->notch / 2),
+	  0,
+	  (max_width / 2) + (config->notch / 2),
+	  ideal_height
+	);
+	//if (config->notch_debug) {
+	//}
+
+
+	for (int i = 0; i < (word_count / 2); i++) {
+		char *a = word_list[i];
+		char *b = word_list[word_count - i - 1];
+		//sway_log(SWAY_INFO, "%c, %c", a, b);
+		word_list[i] = b;
+		word_list[word_count - i - 1] = a;
+	}
+
+	for (int i = 0; i < word_count; i++) {
+		char *word = word_list[i];
+		// TODO: we're not using text_height anymore at this point
+		get_text_size(cairo, config->font_description, &text_width, &text_height, NULL,
+				1, config->pango_markup, "%s", word);
+		*x -= text_width + margin;
+		//TODO: precompute this stuff
+		if (
+		     *x < (int)((max_width / 2) + (output->bar->config->notch / 2))
+		  && *x > (int)((max_width / 2) - (output->bar->config->notch / 2))
+	 	) {
+			// Pop the icon on the other side of the notch
+			*x -= output->bar->config->notch;
+		}
+		double text_y = height / 2.0 - text_height / 2.0;
+		cairo_move_to(cairo, *x, (int)floor(text_y));
+		choose_text_aa_mode(ctx, fontcolor);
+		render_text(cairo, config->font_description, 1, config->pango_markup, "%s", word);
+	}
+
+	return output->height;
 }
 
 static enum hotspot_event_handling block_hotspot_callback(
@@ -718,7 +733,7 @@ static uint32_t render_to_cairo(struct render_context *ctx) {
 		uint32_t h = render_status_line(ctx, &x);
 		max_height = h > max_height ? h : max_height;
 	}
-	x = 0;
+	x = 20;
 	if (config->workspace_buttons) {
 		struct swaybar_workspace *ws;
 		wl_list_for_each(ws, &output->workspaces, link) {

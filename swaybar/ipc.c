@@ -153,6 +153,22 @@ static bool ipc_parse_config(
 		free(font_value);
 	}
 
+	json_object *notch = json_object_object_get(bar_config, "notch");
+	if (notch) {
+		config->notch = json_object_get_int(notch);
+	}
+
+	json_object *notch_debug = json_object_object_get(bar_config, "notch_debug");
+	if (notch) {
+		config->notch_debug = json_object_get_boolean(notch_debug);
+	}
+
+	json_object *delimeter = json_object_object_get(bar_config, "delimeter");
+	if (delimeter) {
+		free(config->delimeter);
+		config->delimeter = strdup(json_object_get_string(delimeter));
+	}
+
 	json_object *gaps = json_object_object_get(bar_config, "gaps");
 	if (gaps) {
 		json_object *top = json_object_object_get(gaps, "top");
@@ -281,16 +297,6 @@ static bool ipc_parse_config(
 	json_object *wrap_scroll = json_object_object_get(bar_config, "wrap_scroll");
 	if (wrap_scroll) {
 		config->wrap_scroll = json_object_get_boolean(wrap_scroll);
-	}
-
-	json_object *notch = json_object_object_get(bar_config, "notch");
-	if (notch) {
-		config->notch = json_object_get_int(notch);
-	}
-
-	json_object *delimeter = json_object_object_get(bar_config, "delimeter");
-	if (notch) {
-		config->delimeter = strdup(json_object_get_string(delimeter));
 	}
 #if HAVE_TRAY
 	json_object *tray_outputs, *tray_padding, *tray_bindings, *icon_theme;

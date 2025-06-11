@@ -138,6 +138,7 @@ sway_sources = files(
 	'commands/bar/mode.c',
 	'commands/bar/modifier.c',
 	'commands/bar/notch.c',
+	'commands/bar/notch_debug.c',
 	'commands/bar/output.c',
 	'commands/bar/pango_markup.c',
 	'commands/bar/position.c',

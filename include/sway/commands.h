@@ -212,6 +212,7 @@ sway_cmd bar_cmd_gaps;
 sway_cmd bar_cmd_mode;
 sway_cmd bar_cmd_modifier;
 sway_cmd bar_cmd_notch;
+sway_cmd bar_cmd_notch_debug;
 sway_cmd bar_cmd_output;
 sway_cmd bar_cmd_height;
 sway_cmd bar_cmd_hidden_state;
