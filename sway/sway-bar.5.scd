@@ -37,6 +37,11 @@ runtime.
 *binding_mode_indicator* yes|no
 	Enable or disable binding mode indicator. Default is _yes_.
 
+*delimeter* <delimeter_char>
+	This is the delimeter that can be used in conjunction with *notch*. It is
+	the char to use to split the status bar text on in order to split on these
+	boundaries when flowing around the notch on mobile phones with a notch.
+
 *font* <font>
 	Specifies the font to be used in the bar. _font_ should be specified as a
 	pango font description. For more information on pango font descriptions,
@@ -82,6 +87,15 @@ runtime.
 
 *modifier* <Modifier>|none
 	Specifies the modifier key that shows a hidden bar. Default is _Mod4_.
+
+*notch* <width>
+	If specified, the given pixels in <width> will be skipped in the center
+	of the screen. This can be used to avoid the notch on some mobile phones
+	that have one. This should be used in conjunction with *delimeter*.
+
+*notch_debug* enabled|disabled
+	If enabled in conjunction with *notch* above, this will color the area
+	that is the "notch-no-go-zone" to help get the sizing right.
 
 *output* <output>|\*
 	Restrict the bar to a certain output, can be specified multiple times. If
